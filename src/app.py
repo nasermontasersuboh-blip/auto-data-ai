@@ -1,4 +1,4 @@
-src/app.pyfrom fastapi import FastAPI, UploadFile, File
+From fastapi import FastAPI, UploadFile, File
 from fastapi.responses import HTMLResponse, JSONResponse
 from .models import InvoiceFields
 from .extractors import pdf_bytes_to_text, extract_invoice_fields

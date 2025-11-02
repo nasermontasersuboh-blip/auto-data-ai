@@ -1,7 +1,0 @@
-fastapi
-uvicorn
-pydantic
-python-multipart
-pdfminer.six
-pandas
-PyMuPDF

@@ -1,5 +1,3 @@
-    }
-App.py
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import HTMLResponse, JSONResponse
 from models import InvoiceFields

@@ -1,5 +1,5 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi import FastAPI UploadFile File
+from fastapiresponses import HTMLResponse JSONResponse
 from .models import InvoiceFields
 from .extractors import pdf_bytes_to_text, extract_invoice_fields
 

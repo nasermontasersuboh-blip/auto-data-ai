@@ -1,15 +1,16 @@
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import HTMLResponse
+from fastapi import FastAPI, File, UploadFile
 from extractors import pdf_bytes_to_text, extract_invoice_fields
+import uvicorn
 
-app = FastAPI(title="auto-data-ai", version="0.1.0")
+app = FastAPI(
+    title="auto-data-ai",
+    version="1.0",
+    description="A simple API for extracting text and invoice data from PDF files."
+)
 
-@app.get("/", response_class=HTMLResponse)
-async def index():
-    return """
-    <h1>Auto-Data AI</h1>
-    <p>Upload an invoice via <a href="/docs">/docs</a>.</p>
-    """
+@app.get("/")
+def index():
+    return {"message": "Welcome to Auto Data AI"}
 
 @app.get("/health")
 def health():
@@ -17,33 +18,21 @@ def health():
 
 @app.post("/extract")
 async def extract(file: UploadFile = File(...)):
+    # Read PDF file
     pdf_bytes = await file.read()
+    
+    # Extract text
     text = pdf_bytes_to_text(pdf_bytes)
-    vendor, date, total, currency = extract_invoice_fields(text)
+    
+    # Extract invoice fields
+    fields = extract_invoice_fields(text)
+    
     return {
         "success": True,
-        "fields": {
-            "vendor": vendor,
-            "date": date,
-            "total": total,
-            "currency": currency
-        },
-        "raw_text": text[:5000]
+        "fields": fields,
+        "raw_text": text[:1000]  # limit preview
     }
-    @app.get("/", summary="Index")
-def index():
-    return {
-        "name": "auto-data-ai",
-        "status": "ok",
-        "endpoints": {
-            "docs": "/docs",
-            "health": "/health",
-            "extract": "/extract (POST)"
-        },
-        "message": "Welcome to Auto-Data-AI! Upload a PDF invoice to extract key data fields."
-    }
-    # add near the top with other imports
-from fastapi.staticfiles import StaticFiles
 
-# after `app = FastAPI(...)`, mount the static folder
-app.mount("/ui", StaticFiles(directory="public", html=True), name="ui")
+# Run locally
+if __name__ == "__main__":
+    uvicorn.run("app:app", host="0.0.0.0", port=8000)

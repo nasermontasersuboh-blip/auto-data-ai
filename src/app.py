@@ -30,3 +30,16 @@ async def extract(file: UploadFile = File(...)):
         },
         "raw_text": text[:5000]
     }
+    @app.get("/", summary="Index")
+def index():
+    return {
+        "name": "auto-data-ai",
+        "status": "ok",
+        "endpoints": {
+            "docs": "/docs",
+            "health": "/health",
+            "extract": "/extract (POST)"
+        },
+        "message": "Welcome to Auto-Data-AI! Upload a PDF invoice to extract key data fields."
+    }
+    

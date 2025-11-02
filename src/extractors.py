@@ -1,9 +1,7 @@
-# src/extractors.py
 from utils import find_currency, find_date, find_total, find_vendor
-import fitz  # PyMuPDF for PDF processing
+import fitz  # PyMuPDF
 
 def pdf_bytes_to_text(pdf_bytes: bytes) -> str:
-    """Extract text from a PDF file (in bytes)."""
     text = ""
     with fitz.open(stream=pdf_bytes, filetype="pdf") as doc:
         for page in doc:
@@ -11,7 +9,6 @@ def pdf_bytes_to_text(pdf_bytes: bytes) -> str:
     return text
 
 def extract_invoice_fields(text: str):
-    """Extract key fields (vendor, date, total, currency) from text."""
     vendor = find_vendor(text)
     date = find_date(text)
     total = find_total(text)

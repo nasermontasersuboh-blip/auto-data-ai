@@ -42,4 +42,8 @@ def index():
         },
         "message": "Welcome to Auto-Data-AI! Upload a PDF invoice to extract key data fields."
     }
-    
+    # add near the top with other imports
+from fastapi.staticfiles import StaticFiles
+
+# after `app = FastAPI(...)`, mount the static folder
+app.mount("/ui", StaticFiles(directory="public", html=True), name="ui")

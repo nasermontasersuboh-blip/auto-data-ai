@@ -1,8 +1,8 @@
-from fastapi import FastAPI, UploadFile, File
+from pydantic import BaseModel
+from typing import Optional
 
-class InvoiceFields:
-    def __init__(self, text: str):
-        self.text = text
-
-    def to_dict(self):
-        return {"text": self.text}
+class InvoiceFields(BaseModel):
+    vendor: Optional[str] = None
+    date: Optional[str] = None
+    total: Optional[str] = None
+    currency: Optional[str] = None

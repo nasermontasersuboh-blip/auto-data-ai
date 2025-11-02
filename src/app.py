@@ -1,16 +1,17 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.responses import HTMLResponse
 from extractors import pdf_bytes_to_text, extract_invoice_fields
-import uvicorn
 
-app = FastAPI(
-    title="auto-data-ai",
-    version="1.0",
-    description="A simple API for extracting text and invoice data from PDF files."
-)
+app = FastAPI(title="auto-data-ai", version="1.0")
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def index():
-    return {"message": "Welcome to Auto Data AI"}
+    return """
+    <!doctype html><html><body style="font-family:sans-serif;padding:24px">
+      <h1>Auto Data AI</h1>
+      <p><a href="/docs">Open API Docs</a> • <a href="/health">Health</a></p>
+    </body></html>
+    """
 
 @app.get("/health")
 def health():
@@ -18,21 +19,9 @@ def health():
 
 @app.post("/extract")
 async def extract(file: UploadFile = File(...)):
-    # Read PDF file
     pdf_bytes = await file.read()
-    
-    # Extract text
     text = pdf_bytes_to_text(pdf_bytes)
-    
-    # Extract invoice fields
-    fields = extract_invoice_fields(text)
-    
-    return {
-        "success": True,
-        "fields": fields,
-        "raw_text": text[:1000]  # limit preview
-    }
-
-# Run locally
-if __name__ == "__main__":
-    uvicorn.run("app:app", host="0.0.0.0", port=8000)
+    vendor, date, total, currency = extract_invoice_fields(text)
+    return {"success": True, "fields": {
+        "vendor": vendor, "date": date, "total": total, "currency": currency
+    }, "raw_text": text[:1000]}

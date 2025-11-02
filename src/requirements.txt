@@ -3,5 +3,3 @@ uvicorn
 pydantic
 python-multipart
 pdfminer.six
-pandas==2.2.2
-PyMuPDF
